@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Timeline from '../../components/Timeline.astro';
+import { COMPONENTS, COMPONENT_KEYS, type ComponentKey } from '../../lib/components';
+import { getReleases } from '../../lib/releases';
+
+export function getStaticPaths() {
+  return COMPONENT_KEYS.map((component) => ({ params: { component } }));
+}
+
+const component = Astro.params.component as ComponentKey;
+const meta = COMPONENTS[component];
+const releases = await getReleases(component);
+---
+
+<Base title={meta.name} description={`Release notes for ${meta.name}.`}>
+  <section class="hero">
+    <h1>{meta.name}</h1>
+    <p>{meta.description}</p>
+  </section>
+
+  <nav class="filters" aria-label="Components">
+    <a class="chip" href="/">All</a>
+    {
+      COMPONENT_KEYS.map((key) => (
+        <a class="chip" href={`/${key}/`} aria-current={key === component ? 'page' : undefined} style={`--dot: ${COMPONENTS[key].color}`}>
+          <span class="dot" />
+          {COMPONENTS[key].name}
+        </a>
+      ))
+    }
+  </nav>
+
+  <Timeline releases={releases} />
+</Base>

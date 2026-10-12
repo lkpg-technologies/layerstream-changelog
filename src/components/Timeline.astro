@@ -1,0 +1,24 @@
+---
+import ReleaseCard from './ReleaseCard.astro';
+import { formatDate, groupByDay, type Release } from '../lib/releases';
+
+interface Props {
+  releases: Release[];
+}
+
+const groups = groupByDay(Astro.props.releases);
+---
+
+{groups.length === 0 && <p class="empty">No releases published yet.</p>}
+{
+  groups.map((g) => (
+    <section class="day" data-day={g.day}>
+      <time class="day-label" datetime={g.day}>{formatDate(g.date)}</time>
+      <div class="day-entries">
+        {g.releases.map((r) => (
+          <ReleaseCard release={r} />
+        ))}
+      </div>
+    </section>
+  ))
+}

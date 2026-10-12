@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import { COMPONENTS, COMPONENT_KEYS } from '../lib/components';
+import { getReleases } from '../lib/releases';
+
+const releases = await getReleases();
+---
+
+<Base>
+  <section class="hero">
+    <h1>What's new in Layerstream</h1>
+    <p>New features, improvements and fixes across every Layerstream component.</p>
+  </section>
+
+  <div class="filters" role="toolbar" aria-label="Filter by component">
+    <button class="chip" type="button" data-filter="" aria-pressed="true">All</button>
+    {
+      COMPONENT_KEYS.map((key) => (
+        <button class="chip" type="button" data-filter={key} aria-pressed="false" style={`--dot: ${COMPONENTS[key].color}`}>
+          <span class="dot" />
+          {COMPONENTS[key].name}
+        </button>
+      ))
+    }
+  </div>
+
+  <Timeline releases={releases} />
+</Base>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('.release');
+  const days = document.querySelectorAll<HTMLElement>('.day');
+
+  function apply(filter: string) {
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === filter)));
+    cards.forEach((card) => (card.hidden = !!filter && card.dataset.component !== filter));
+    days.forEach((day) => (day.hidden = !day.querySelector('.release:not([hidden])')));
+    const url = new URL(location.href);
+    if (filter) url.searchParams.set('component', filter);
+    else url.searchParams.delete('component');
+    history.replaceState(null, '', url);
+  }
+
+  chips.forEach((c) => c.addEventListener('click', () => apply(c.dataset.filter ?? '')));
+  const initial = new URL(location.href).searchParams.get('component');
+  if (initial && [...chips].some((c) => c.dataset.filter === initial)) apply(initial);
+</script>

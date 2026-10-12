@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReleaseCard from '../../components/ReleaseCard.astro';
+import { COMPONENTS } from '../../lib/components';
+import { formatDate, getReleases, type Release } from '../../lib/releases';
+
+export async function getStaticPaths() {
+  const releases = await getReleases();
+  return releases.map((release) => ({
+    params: { component: release.data.component, version: release.data.version },
+    props: { release },
+  }));
+}
+
+const { release } = Astro.props as { release: Release };
+const meta = COMPONENTS[release.data.component];
+---
+
+<Base title={`${meta.name} ${release.data.version}`} description={`Release notes for ${meta.name} ${release.data.version}.`}>
+  <a class="back" href={`/${release.data.component}/`}>← All {meta.name} releases</a>
+  <p class="day-label" style="position: static; padding: 0 0 10px">
+    <time datetime={release.data.date.toISOString()}>{formatDate(release.data.date)}</time>
+  </p>
+  <ReleaseCard release={release} />
+</Base>

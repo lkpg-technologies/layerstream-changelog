@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import { COMPONENTS } from '../lib/components';
+import { releaseUrl, type Release } from '../lib/releases';
+
+interface Props {
+  release: Release;
+}
+
+const { release } = Astro.props;
+const { component, version, title } = release.data;
+const meta = COMPONENTS[component];
+const { Content } = await render(release);
+---
+
+<article class="release" id={`${component}-${version}`} data-component={component} style={`--dot: ${meta.color}`}>
+  <div class="release-head">
+    <a class="badge" href={`/${component}/`}><span class="dot"></span>{meta.name}</a>
+    <a class="version mono" href={releaseUrl(release)}>{version}</a>
+    {title && <h2 class="release-title">{title}</h2>}
+  </div>
+  <div class="prose">
+    <Content />
+  </div>
+</article>
