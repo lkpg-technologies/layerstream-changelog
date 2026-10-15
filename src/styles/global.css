@@ -35,7 +35,10 @@ code, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size:
 .site-header { border-bottom: 1px solid var(--border); }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -0.01em; }
-.brand-logo { width: 26px; height: 26px; }
+.brand-logo { width: auto; height: 24px; }
+/* Light-background logo by default, dark-background one in dark mode. */
+:root[data-theme='dark'] .brand-logo-light,
+:root:not([data-theme='dark']) .brand-logo-dark { display: none; }
 .brand span { color: var(--muted); font-weight: 400; }
 .header-links { display: flex; align-items: center; gap: 18px; font-size: 14px; }
 .theme-toggle {

@@ -18,7 +18,7 @@ const fullTitle = title ? `${title} · Layerstream Changelog` : 'Layerstream Cha
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/brand/layerstream-mark-blue.png" />
     <link rel="alternate" type="application/rss+xml" title="Layerstream Changelog" href="/rss.xml" />
     <script is:inline>
       // Runs before first paint so a stored theme never flashes the other one.
@@ -54,8 +54,9 @@ const fullTitle = title ? `${title} · Layerstream Changelog` : 'Layerstream Cha
     <header class="site-header">
       <div class="wrap">
         <a class="brand" href="/">
-          <img class="brand-logo" src="/favicon.svg" alt="" />
-          Layerstream <span>Changelog</span>
+          <img class="brand-logo brand-logo-light" src="/brand/layerstream-logo-light.png" alt="Layerstream" width="572" height="108" />
+          <img class="brand-logo brand-logo-dark" src="/brand/layerstream-logo-dark.png" alt="Layerstream" width="572" height="108" />
+          <span>Changelog</span>
         </a>
         <nav class="header-links">
           <a class="home-link" href="https://layerstream.se">layerstream.se</a>
