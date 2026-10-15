@@ -13,12 +13,14 @@ function compareVersions(a: string, b: string): number {
   return 0;
 }
 
-/** All releases, newest first. */
+/** All releases, newest day first; within a day, highest version first. */
 export async function getReleases(component?: ComponentKey): Promise<Release[]> {
   const all = await getCollection('releases', (r) => !component || r.data.component === component);
   return all.sort(
     (a, b) =>
-      b.data.date.getTime() - a.data.date.getTime() || compareVersions(b.data.version, a.data.version),
+      isoDay(b.data.date).localeCompare(isoDay(a.data.date)) ||
+      compareVersions(b.data.version, a.data.version) ||
+      b.data.date.getTime() - a.data.date.getTime(),
   );
 }
 
